@@ -1,5 +1,8 @@
+import os
 import requests
+from dotenv import load_dotenv
 from typing import Any, Text, Dict, List
+
 
 from rasa_sdk.events import SlotSet
 from rasa_sdk import Action, Tracker
@@ -15,7 +18,9 @@ class ActionGetWeather(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        api_key = '5c5df1cb44f76e3cf231ba60687325e3'
+        # Loads the .env file
+        load_dotenv()
+        api_key = os.getenv("OPENWEATHER_API_KEY")
         loc = tracker.get_slot('location')
         current = requests.get('http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'.format(loc, api_key)).json()
         city = current['name']
